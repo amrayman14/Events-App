@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:events_app/provider/user_id_provider.dart';
+import 'package:events_app/provider/theme_provider.dart';
 import 'package:events_app/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:events_app/provider/user_id_provider.dart';
 import 'package:events_app/screens/create_event_screen.dart';
+import 'package:events_app/widgets/main_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:events_app/models/event_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:events_app/provider/theme_provider.dart';
 import '../widgets/event_card.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -13,10 +13,20 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeModeNotifier = ref.read(themeModeProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
         actions: [
+          IconButton(
+            icon: Icon(ref.watch(themeModeProvider) == ThemeMode.light ?
+            Icons.dark_mode
+                : Icons.light_mode),
+            onPressed: () {
+              themeModeNotifier.toggleTheme();
+            },
+          ),
+
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -40,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      drawer: Drawer(),
+      drawer: MainDrawer(),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('events').snapshots(),
         builder: (context, snapshot) {
