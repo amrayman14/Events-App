@@ -15,6 +15,7 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
+  final _key = GlobalKey();
   bool isChecked = false;
   void _toggleInterest() async {
     if (!isChecked) {

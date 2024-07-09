@@ -9,8 +9,9 @@ import 'package:events_app/provider/theme_provider.dart';
 import '../widgets/event_card.dart';
 
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
-
+  HomeScreen({super.key});
+  final CollectionReference eventsDoc =
+      FirebaseFirestore.instance.collection('events');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeModeNotifier = ref.read(themeModeProvider.notifier);
@@ -18,16 +19,14 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Home"),
         actions: [
-
           IconButton(
-            icon: Icon(ref.watch(themeModeProvider) == ThemeMode.light ?
-            Icons.dark_mode
+            icon: Icon(ref.watch(themeModeProvider) == ThemeMode.light
+                ? Icons.dark_mode
                 : Icons.light_mode),
             onPressed: () {
               themeModeNotifier.toggleTheme();
             },
           ),
-
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -53,11 +52,17 @@ class HomeScreen extends ConsumerWidget {
       ),
       drawer: const MainDrawer(),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('events').snapshots(),
+        stream: eventsDoc.snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+                child: Text('No events found.. Try creating some'));
+          }
+
           final events = snapshot.data!.docs
               .map((doc) => Event.fromDocument(doc))
               .toList();
@@ -65,21 +70,45 @@ class HomeScreen extends ConsumerWidget {
             itemCount: events.length,
             itemBuilder: (context, index) {
               final event = events[index];
-              return InkWell(
-                onTap: () {
+              return Dismissible(
+                key: Key(event.id),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+                onDismissed: (direction) async {
                   if (event.creatorId ==
                       FirebaseAuth.instance.currentUser!.uid) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (ctx) => CreateEventScreen(
-                          isUpdating: true,
-                          event: event,
-                        ),
+                    await eventsDoc.doc(event.id).delete();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${event.type} Deleted'),
                       ),
                     );
                   }
                 },
-                child: EventCard(event: event),
+                child: InkWell(
+                  onTap: () {
+                    if (event.creatorId ==
+                        FirebaseAuth.instance.currentUser!.uid) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => CreateEventScreen(
+                            isUpdating: true,
+                            event: event,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  child: EventCard(event: event),
+                ),
               );
             },
           );

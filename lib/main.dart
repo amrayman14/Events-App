@@ -36,7 +36,7 @@ class App extends ConsumerWidget {
             return const SplashScreen();
           }
           if (snapshot.hasData) {
-            return const HomeScreen();
+            return  HomeScreen();
           }
           return const AuthScreen();
         },
