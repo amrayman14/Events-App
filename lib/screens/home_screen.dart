@@ -18,6 +18,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Home"),
         actions: [
+
           IconButton(
             icon: Icon(ref.watch(themeModeProvider) == ThemeMode.light ?
             Icons.dark_mode

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:events_app/models/event_model.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
@@ -15,7 +17,7 @@ class EventCard extends StatefulWidget {
 class _EventCardState extends State<EventCard> {
   bool isChecked = false;
   void _toggleInterest() async {
-    if(!isChecked){
+    if (!isChecked) {
       setState(() {
         isChecked = true;
         widget.event.interestedCount += 1;
@@ -26,8 +28,7 @@ class _EventCardState extends State<EventCard> {
           .update({
         'interestedCount': widget.event.interestedCount,
       });
-    }
-    else{
+    } else {
       setState(() {
         isChecked = false;
         widget.event.interestedCount -= 1;
@@ -50,20 +51,54 @@ class _EventCardState extends State<EventCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.event.type,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(
+              'Type : ${widget.event.type}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
-            Text(widget.event.date),
+            Text(
+              'Date : ${widget.event.date}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
             const SizedBox(height: 8),
-            Text(widget.event.location),
+            Text(
+              'Location : ${widget.event.location}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
             const SizedBox(height: 8),
-            Text(widget.event.description),
+            Text(
+              'Details : ${widget.event.description}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Interested: ${widget.event.interestedCount}'),
+                Expanded(
+                  child: Text(
+                    'Interested : ${widget.event.interestedCount}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
                 IconButton(
                   icon: !isChecked
                       ? const Icon(Icons.favorite_border)
@@ -72,6 +107,15 @@ class _EventCardState extends State<EventCard> {
                           color: Colors.red,
                         ),
                   onPressed: _toggleInterest,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: () {
+                    Share.share('Check out this event: ${widget.event.type}');
+                  },
                 ),
               ],
             ),
