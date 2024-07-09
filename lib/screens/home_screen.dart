@@ -51,7 +51,7 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('events').snapshots(),
         builder: (context, snapshot) {

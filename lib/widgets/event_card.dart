@@ -64,7 +64,7 @@ class _EventCardState extends State<EventCard> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
+
               ),
             ),
             const SizedBox(height: 8),
@@ -73,7 +73,6 @@ class _EventCardState extends State<EventCard> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
               ),
             ),
             const SizedBox(height: 8),
@@ -82,7 +81,6 @@ class _EventCardState extends State<EventCard> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
               ),
             ),
             const SizedBox(height: 8),
@@ -95,7 +93,6 @@ class _EventCardState extends State<EventCard> {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black,
                     ),
                   ),
                 ),

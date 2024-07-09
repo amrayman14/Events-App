@@ -72,7 +72,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: ref.watch(themeModeProvider) == ThemeMode.light ?
+      Colors.amberAccent :
+          Colors.deepPurple,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
